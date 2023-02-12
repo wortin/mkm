@@ -1,6 +1,10 @@
 package nchart
 
-import "strings"
+import (
+	"errors"
+	"fmt"
+	"strings"
+)
 
 type Bz [8]int
 
@@ -20,30 +24,43 @@ func (z Bz) String() string {
 	return s.String()
 }
 
-func ToBz(s string) Bz {
+func ToBz(s string) (Bz, error) {
 	var bz Bz
 	var zs []string
 	for _, z := range s {
 		zs = append(zs, string(z))
 	}
+	if len(zs) != 8 {
+		return bz, errors.New(fmt.Sprintf("illegal ba zi {%s} for length != 8", s))
+	}
 	for i, z := range zs {
 		if i%2 == 0 {
+			isFound := false
 			for j, c := range TgChars {
 				if c == z {
 					bz[i] = j
+					isFound = true
 					break
 				}
 			}
+			if !isFound {
+				return bz, errors.New(fmt.Sprintf("illegal ba zi {%s} for {%d} word is not tian gan", s, i))
+			}
 		} else {
+			isFound := false
 			for j, c := range DzChars {
 				if c == z {
 					bz[i] = j
+					isFound = true
 					break
 				}
 			}
+			if !isFound {
+				return bz, errors.New(fmt.Sprintf("illegal ba zi {%s} for {%d} word is not di zhi", s, i))
+			}
 		}
 	}
-	return bz
+	return bz, nil
 }
 
 type BzNChart struct {
