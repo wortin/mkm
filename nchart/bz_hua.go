@@ -10,8 +10,8 @@ type HuaInfo struct {
 	WxOfBz     WxOfBz       // 干支五行
 	TgDzHasHua [8]bool      // 	干支是否合化
 	Tg5hCanHua []Tg5hCanHua // 天干五合能化的天干组合
-	Dz3mCanHua Dz3mCanHua   // 地支三会能化的地支组合
-	Dz3hCanHua Dz3hCanHua   // 地支三合能化的地支组合
+	Dz3mCanHua *Dz3mCanHua  // 地支三会能化的地支组合
+	Dz3hCanHua *Dz3hCanHua  // 地支三合能化的地支组合
 	DzbhCanHua []DzbhCanHua // 地支半合能化的地支组合
 	Dz6hCanHua []Dz6hCanHua // 地支六合能化的地支组合
 }
@@ -39,7 +39,7 @@ func (z Bz) hua(hi *HuaInfo) bool {
 	hasHua := false
 	// 天干先合化
 	tg5hs := z.findAllTg5hCanHua(hi)
-	hi.Tg5hCanHua = tg5hs
+	hi.Tg5hCanHua = append(hi.Tg5hCanHua, tg5hs...)
 	for _, tg5h := range tg5hs {
 		hi.WxOfBz[tg5h.tg1Loc] = tg5h.wx
 		hi.WxOfBz[tg5h.tg2Loc] = tg5h.wx
@@ -50,8 +50,8 @@ func (z Bz) hua(hi *HuaInfo) bool {
 	// 地支再按顺序依次合化
 	// 三会
 	dz3ms := z.findAllDz3mCanHua(hi)
-	hi.Dz3mCanHua = dz3ms
-	if dz3ms != dz3mCanNotHua {
+	if dz3ms != nil {
+		hi.Dz3mCanHua = dz3ms
 		hi.WxOfBz[dz3ms.dz1Loc] = dz3ms.wx
 		hi.WxOfBz[dz3ms.dz2Loc] = dz3ms.wx
 		hi.WxOfBz[dz3ms.dz3Loc] = dz3ms.wx
@@ -62,8 +62,8 @@ func (z Bz) hua(hi *HuaInfo) bool {
 	}
 	// 三合
 	dz3hs := z.findAllDz3hCanHua(hi)
-	hi.Dz3hCanHua = dz3hs
-	if dz3hs != dz3hCanNotHua {
+	if dz3hs != nil {
+		hi.Dz3hCanHua = dz3hs
 		hi.WxOfBz[dz3hs.dz1Loc] = dz3hs.wx
 		hi.WxOfBz[dz3hs.dz2Loc] = dz3hs.wx
 		hi.WxOfBz[dz3hs.dz3Loc] = dz3hs.wx
@@ -74,7 +74,7 @@ func (z Bz) hua(hi *HuaInfo) bool {
 	}
 	// 半合
 	dzbhs := z.findAllDzbhCanHua(hi)
-	hi.DzbhCanHua = dzbhs
+	hi.DzbhCanHua = append(hi.DzbhCanHua, dzbhs...)
 	for _, dzbh := range dzbhs {
 		hi.WxOfBz[dzbh.dz1Loc] = dzbh.wx
 		hi.WxOfBz[dzbh.dz2Loc] = dzbh.wx
@@ -84,7 +84,7 @@ func (z Bz) hua(hi *HuaInfo) bool {
 	}
 	// 六合
 	dz6hs := z.findAllDz6hCanHua(hi)
-	hi.Dz6hCanHua = dz6hs
+	hi.Dz6hCanHua = append(hi.Dz6hCanHua, dz6hs...)
 	for _, dz6h := range dz6hs {
 		hi.WxOfBz[dz6h.dz1Loc] = dz6h.wx
 		hi.WxOfBz[dz6h.dz2Loc] = dz6h.wx
@@ -287,33 +287,33 @@ type DzbhCanHua struct {
 var dzbhCanNotHua = DzbhCanHua{-1, -1, -1}
 
 // findAllDz3hCanHua 找出符合地支三合条件的地支组，事实上如果有，只能有1组
-func (z Bz) findAllDz3hCanHua(hi *HuaInfo) Dz3hCanHua {
+func (z Bz) findAllDz3hCanHua(hi *HuaInfo) *Dz3hCanHua {
 	tgDzHasHua := hi.TgDzHasHua
 	if !tgDzHasHua[z.NzLoc()] && !tgDzHasHua[z.YzLoc()] && !tgDzHasHua[z.RzLoc()] {
 		c := z.dz3hCanHua(z.NzLoc(), z.YzLoc(), z.RzLoc(), hi)
-		if c != dz3hCanNotHua {
+		if c != nil {
 			return c
 		}
 	}
 	if !tgDzHasHua[z.NzLoc()] && !tgDzHasHua[z.YzLoc()] && !tgDzHasHua[z.SzLoc()] {
 		c := z.dz3hCanHua(z.NzLoc(), z.YzLoc(), z.SzLoc(), hi)
-		if c != dz3hCanNotHua {
+		if c != nil {
 			return c
 		}
 	}
 	if !tgDzHasHua[z.NzLoc()] && !tgDzHasHua[z.RzLoc()] && !tgDzHasHua[z.SzLoc()] {
 		c := z.dz3hCanHua(z.NzLoc(), z.RzLoc(), z.SzLoc(), hi)
-		if c != dz3hCanNotHua {
+		if c != nil {
 			return c
 		}
 	}
 	if !tgDzHasHua[z.YzLoc()] && !tgDzHasHua[z.RzLoc()] && !tgDzHasHua[z.SzLoc()] {
 		c := z.dz3hCanHua(z.YzLoc(), z.RzLoc(), z.SzLoc(), hi)
-		if c != dz3hCanNotHua {
+		if c != nil {
 			return c
 		}
 	}
-	return dz3hCanNotHua
+	return nil
 }
 
 func (z Bz) dz3h(dz1Loc, dz2Loc, dz3Loc int, hi *HuaInfo) Wx {
@@ -335,17 +335,17 @@ func (z Bz) dz3h(dz1Loc, dz2Loc, dz3Loc int, hi *HuaInfo) Wx {
 	return wx
 }
 
-func (z Bz) dz3hCanHua(dz1Loc, dz2Loc, dz3Loc int, hi *HuaInfo) Dz3hCanHua {
+func (z Bz) dz3hCanHua(dz1Loc, dz2Loc, dz3Loc int, hi *HuaInfo) *Dz3hCanHua {
 	wx := z.dz3h(dz1Loc, dz2Loc, dz3Loc, hi)
 	if wx == -1 {
-		return dz3hCanNotHua
+		return nil
 	}
 	wxOfBz := hi.WxOfBz
 	// 地支三合，如果有天干对应五行恰是其合化五行，则能化
 	if wx == wxOfBz.tgOfDz(dz1Loc) || wx == wxOfBz.tgOfDz(dz2Loc) || wx == wxOfBz.tgOfDz(dz3Loc) {
-		return Dz3hCanHua{dz1Loc, dz2Loc, dz3Loc, wx}
+		return &Dz3hCanHua{dz1Loc, dz2Loc, dz3Loc, wx}
 	}
-	return dz3hCanNotHua
+	return nil
 }
 
 type Dz3hCanHua struct {
@@ -355,37 +355,35 @@ type Dz3hCanHua struct {
 	wx     Wx
 }
 
-var dz3hCanNotHua = Dz3hCanHua{-1, -1, -1, -1}
-
 // findAllDz3mCanHua 找出符合地支三会条件的地支组，事实上如果有，只能有1组
-func (z Bz) findAllDz3mCanHua(hi *HuaInfo) Dz3mCanHua {
+func (z Bz) findAllDz3mCanHua(hi *HuaInfo) *Dz3mCanHua {
 	wxOfBz := hi.WxOfBz
 	tgDzHasHua := hi.TgDzHasHua
 	if !tgDzHasHua[z.NzLoc()] && !tgDzHasHua[z.YzLoc()] && !tgDzHasHua[z.RzLoc()] {
 		c := z.dz3mCanHua(z.NzLoc(), z.YzLoc(), z.RzLoc(), wxOfBz)
-		if c != dz3mCanNotHua {
+		if c != nil {
 			return c
 		}
 	}
 	if !tgDzHasHua[z.NzLoc()] && !tgDzHasHua[z.YzLoc()] && !tgDzHasHua[z.SzLoc()] {
 		c := z.dz3mCanHua(z.NzLoc(), z.YzLoc(), z.SzLoc(), wxOfBz)
-		if c != dz3mCanNotHua {
+		if c != nil {
 			return c
 		}
 	}
 	if !tgDzHasHua[z.NzLoc()] && !tgDzHasHua[z.RzLoc()] && !tgDzHasHua[z.SzLoc()] {
 		c := z.dz3mCanHua(z.NzLoc(), z.RzLoc(), z.SzLoc(), wxOfBz)
-		if c != dz3mCanNotHua {
+		if c != nil {
 			return c
 		}
 	}
 	if !tgDzHasHua[z.YzLoc()] && !tgDzHasHua[z.RzLoc()] && !tgDzHasHua[z.SzLoc()] {
 		c := z.dz3mCanHua(z.YzLoc(), z.RzLoc(), z.SzLoc(), wxOfBz)
-		if c != dz3mCanNotHua {
+		if c != nil {
 			return c
 		}
 	}
-	return dz3mCanNotHua
+	return nil
 }
 
 func (z Bz) dz3m(dz1Loc, dz2Loc, dz3Loc int) Wx {
@@ -393,15 +391,15 @@ func (z Bz) dz3m(dz1Loc, dz2Loc, dz3Loc int) Wx {
 	return z.Dz(dz1Loc).Dz3m(z.Dz(dz2Loc), z.Dz(dz3Loc))
 }
 
-func (z Bz) dz3mCanHua(dz1Loc, dz2Loc, dz3Loc int, wxOfBz WxOfBz) Dz3mCanHua {
+func (z Bz) dz3mCanHua(dz1Loc, dz2Loc, dz3Loc int, wxOfBz WxOfBz) *Dz3mCanHua {
 	wx := z.dz3m(dz1Loc, dz2Loc, dz3Loc)
 	if wx == -1 {
-		return dz3mCanNotHua
+		return nil
 	}
 	if wx == wxOfBz.tgOfDz(dz1Loc) || wx == wxOfBz.tgOfDz(dz2Loc) || wx == wxOfBz.tgOfDz(dz3Loc) {
-		return Dz3mCanHua{dz1Loc, dz2Loc, dz3Loc, wx}
+		return &Dz3mCanHua{dz1Loc, dz2Loc, dz3Loc, wx}
 	}
-	return dz3mCanNotHua
+	return nil
 }
 
 type Dz3mCanHua struct {
@@ -410,8 +408,6 @@ type Dz3mCanHua struct {
 	dz3Loc int
 	wx     Wx
 }
-
-var dz3mCanNotHua = Dz3mCanHua{-1, -1, -1, -1}
 
 // findAllTg5hCanHua 找出八字中，所有符合天干五合条件的天干五合候选组
 func (z Bz) findAllTg5hCanHua(hi *HuaInfo) []Tg5hCanHua {

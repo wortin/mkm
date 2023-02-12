@@ -21,50 +21,52 @@ func (w Wx) String() string {
 
 // IsSheng w生o
 func (w Wx) IsSheng(o Wx) bool {
-	if w == 4 {
-		return o == 0
-	}
-	return w-o == -1
+	return o.ShengXing() == w
 }
 
 // IsBeSheng w被o生
 func (w Wx) IsBeSheng(o Wx) bool {
-	if w == 0 {
-		return o == 4
-	}
-	return w-o == 1
+	return w.ShengXing() == o
 }
 
 // IsKe w克o
 func (w Wx) IsKe(o Wx) bool {
-	switch w {
-	case WxMu:
-		return WxTu == o
-	case WxHuo:
-		return WxJin == o
-	case WxTu:
-		return WxShui == o
-	case WxJin:
-		return WxMu == o
-	case WxShui:
-		return WxHuo == o
-	}
-	return false
+	return o.KeXing() == w
 }
 
 // IsBeKe w被o克
 func (w Wx) IsBeKe(o Wx) bool {
+	return w.KeXing() == o
+}
+
+func (w Wx) KeXing() Wx {
 	switch w {
 	case WxMu:
-		return WxJin == o
+		return WxJin
 	case WxHuo:
-		return WxShui == o
+		return WxShui
 	case WxTu:
-		return WxMu == o
+		return WxMu
 	case WxJin:
-		return WxHuo == o
+		return WxHuo
 	case WxShui:
-		return WxTu == o
+		return WxTu
 	}
-	return false
+	return -1
+}
+
+func (w Wx) ShengXing() Wx {
+	switch w {
+	case WxMu:
+		return WxShui
+	case WxHuo:
+		return WxMu
+	case WxTu:
+		return WxHuo
+	case WxJin:
+		return WxTu
+	case WxShui:
+		return WxJin
+	}
+	return -1
 }

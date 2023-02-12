@@ -11,7 +11,7 @@ func TestBz_findDz3hCandidates(t *testing.T) {
 	wxOfBz := bz.initWxOfBz()
 	hi := &HuaInfo{WxOfBz: wxOfBz, Zs12s: bz.GetZs12ss()}
 	c := bz.findAllDz3hCanHua(hi)
-	if c != dz3hCanNotHua {
+	if c != nil {
 		t.Errorf("dz3h %s err, exp empty but %v", bz, c)
 	}
 	// 月支寅日支戌时支午三合成火，日干为丙，此八字的长生十二宫依次为 胎/长生/墓库/帝旺 ，又月干透出火，故此三合得化
@@ -31,8 +31,8 @@ func TestBz_findDz3mCandidates(t *testing.T) {
 	wxOfBz := bz.initWxOfBz()
 	hi := &HuaInfo{WxOfBz: wxOfBz, Zs12s: bz.GetZs12ss()}
 	c := bz.findAllDz3mCanHua(hi)
-	expC := Dz3mCanHua{1, 5, 7, WxMu}
-	if c != expC {
+	expC := &Dz3mCanHua{1, 5, 7, WxMu}
+	if reflect.DeepEqual(c, expC) {
 		t.Errorf("dz3m %s err, exp %v but %v", bz, expC, c)
 	}
 }

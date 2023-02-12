@@ -20,13 +20,41 @@ func (z Bz) String() string {
 	return s.String()
 }
 
+func ToBz(s string) Bz {
+	var bz Bz
+	var zs []string
+	for _, z := range s {
+		zs = append(zs, string(z))
+	}
+	for i, z := range zs {
+		if i%2 == 0 {
+			for j, c := range TgChars {
+				if c == z {
+					bz[i] = j
+					break
+				}
+			}
+		} else {
+			for j, c := range DzChars {
+				if c == z {
+					bz[i] = j
+					break
+				}
+			}
+		}
+	}
+	return bz
+}
+
 type BzNChart struct {
 	*HeInfo
 	Shen10s    [8]Shen10
 	DzCg       [4][3]Tg
 	DzCgShen10 [4][3]Shen10
 	Shea       *Shea
+	SelfWs     *SelfWs
 	YShen      Wx
+	XShen      Wx
 }
 
 func (z Bz) GetBzNChart() *BzNChart {
@@ -40,10 +68,12 @@ func (z Bz) GetBzNChart() *BzNChart {
 	dzCg := z.getDzCg()
 	// 地支藏干十神
 	dzCgShen10 := z.getDzCgShen10(dzCg, ei)
-	c := &BzNChart{ei, ss, dzCg, dzCgShen10, nil, -1}
+	c := &BzNChart{HeInfo: ei, Shen10s: ss, DzCg: dzCg, DzCgShen10: dzCgShen10}
 	// 神煞
 	z.findShea(c)
-	// 用神
+	// 判断日主旺衰
+	z.judgeSelfWs(c)
+	// 找用神
 	z.findYShen(c)
 	return c
 }

@@ -4,8 +4,8 @@ type HeInfo struct {
 	*HuaInfo              // 合化信息
 	TgDzHasHe [8]bool     // 干支是否只合不化
 	Tg5hCanHe []Tg5hCanHe // 天干五合只合不化的天干组合
-	Dz3mCanHe Dz3mCanHe   // 地支三会只合不化的地支组合
-	Dz3hCanHe Dz3hCanHe   // 地支三合只合不化的地支组合
+	Dz3mCanHe *Dz3mCanHe  // 地支三会只合不化的地支组合
+	Dz3hCanHe *Dz3hCanHe  // 地支三合只合不化的地支组合
 	DzbhCanHe []DzbhCanHe // 地支半合只合不化的地支组合
 	Dz6hCanHe []Dz6hCanHe // 地支六合只合不化的地支组合
 }
@@ -83,7 +83,7 @@ func (z Bz) findAllDz3h(ei *HeInfo) {
 					!ei.TgDzHasHe[dz1Loc] && !ei.TgDzHasHe[dz2Loc] && !ei.TgDzHasHe[dz3Loc] {
 					wx := z.dz3h(dz1Loc, dz2Loc, dz3Loc, ei.HuaInfo)
 					if wx != -1 {
-						ei.Dz3hCanHe = Dz3hCanHe{dz1Loc, dz2Loc, dz3Loc, wx}
+						ei.Dz3hCanHe = &Dz3hCanHe{dz1Loc, dz2Loc, dz3Loc, wx}
 						ei.TgDzHasHe[dz1Loc] = true
 						ei.TgDzHasHe[dz2Loc] = true
 						ei.TgDzHasHe[dz3Loc] = true
@@ -109,7 +109,7 @@ func (z Bz) findAllDz3m(ei *HeInfo) {
 				if !ei.TgDzHasHua[dz1Loc] && !ei.TgDzHasHua[dz2Loc] && !ei.TgDzHasHua[dz3Loc] {
 					wx := z.dz3m(dz1Loc, dz2Loc, dz3Loc)
 					if wx != -1 {
-						ei.Dz3mCanHe = Dz3mCanHe{dz1Loc, dz2Loc, dz3Loc, wx}
+						ei.Dz3mCanHe = &Dz3mCanHe{dz1Loc, dz2Loc, dz3Loc, wx}
 						ei.TgDzHasHe[dz1Loc] = true
 						ei.TgDzHasHe[dz2Loc] = true
 						ei.TgDzHasHe[dz3Loc] = true
