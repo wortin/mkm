@@ -10,11 +10,15 @@
 
 名 first name (ming) 指中国人传统形式的名，由1个汉字或2个汉字组成。
 
-八字 eight characters (zi8) 即生辰八字，表示一个人出生的时间，由年柱、月柱、日柱、时柱4部分组成。
+八字 eight characters (bz) 即生辰八字，表示一个人出生的时间，由年柱、月柱、日柱、时柱4部分组成。
 
 四柱 four columns (zhu4) 由年柱、月柱、日柱、时柱这4个柱组成。
 
-年柱 year column (nz) 
+年柱 year column (nz) 由年的天干和地支组成。
+
+年干 year heavenly stem (ng) 年的天干。
+
+年支 year earthly branch (nz) 年的地支。
 
 月柱 month column (yz)
 
@@ -30,7 +34,7 @@
 
 五行 the five elements (wx)
 
-生 generation (sheng) 
+生 generation (sheng)
 
 克 restriction (ke)
 
@@ -40,19 +44,27 @@
 
 化 conversion (hua)
 
-长生十二神 the twelve immortals (zs12)
+长生十二神 the twelve immortals (zs12s)
 
-天干六合 six-harmonies of heavenly stems (tg6h)
+天干五合 five-harmonies of heavenly stems (tg5h)
 
 地支六合 six-harmonies of earthly branches (dz6h)
+
+地支半合 semi-harmonies of earthly branches (dzbh)
 
 地支三合 three-harmonies of earthly branches (dz3h)
 
 地支三会 three-meetings of earthly branches (dz3m)
 
-地支半合 half-harmonies of earthly branches (dzhh)
-
 命盘 natal chart (nchart) 指按照人的出生时间和相关理论形成的一种能体现、解释、预测人的性格或命运的信息组织形式
+
+用神 helpful element (yshen) 指对八字可以起到补偏救弊作用的五行中的某一行
+
+断用神 find helpful element (find yshen) 指通过分析八字中日元的旺衰来找出对日元起到或扶或抑作用的五行
+
+十神 ten spirits (shen10) 指根据日干所对应五行，与其他干支所对应五行的生克关系而定的名词
+
+神煞 good spirit and evil spirit (shea) 
 
 ## 姓名评价标准
 
