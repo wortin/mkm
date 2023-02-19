@@ -1,13 +1,14 @@
 package nchart
 
 type HeInfo struct {
-	*HuaInfo              // 合化信息
-	TgDzHasHe [8]bool     // 干支是否只合不化
-	Tg5hCanHe []Tg5hCanHe // 天干五合只合不化的天干组合
-	Dz3mCanHe *Dz3mCanHe  // 地支三会只合不化的地支组合
-	Dz3hCanHe *Dz3hCanHe  // 地支三合只合不化的地支组合
-	DzbhCanHe []DzbhCanHe // 地支半合只合不化的地支组合
-	Dz6hCanHe []Dz6hCanHe // 地支六合只合不化的地支组合
+	*HuaInfo                 // 合化信息
+	TgDzHasHe    [8]bool     // 干支是否只合不化
+	TgDzHasYaoHe [8]bool     // 干支是否遥合，指不是近邻合
+	Tg5hCanHe    []Tg5hCanHe // 天干五合只合不化的天干组合
+	Dz3mCanHe    *Dz3mCanHe  // 地支三会只合不化的地支组合
+	Dz3hCanHe    *Dz3hCanHe  // 地支三合只合不化的地支组合
+	DzbhCanHe    []DzbhCanHe // 地支半合只合不化的地支组合
+	Dz6hCanHe    []Dz6hCanHe // 地支六合只合不化的地支组合
 }
 
 // getHeInfo 八字经过合化后，找出剩下合而不化的
@@ -40,8 +41,13 @@ func (z Bz) findAllDz6h(ei *HeInfo) {
 		}
 	}
 	for _, i := range ei.Dz6hCanHe {
-		ei.TgDzHasHe[i.dz1Loc] = true
-		ei.TgDzHasHe[i.dz2Loc] = true
+		if i.dz2Loc-i.dz1Loc == 2 {
+			ei.TgDzHasHe[i.dz1Loc] = true
+			ei.TgDzHasHe[i.dz2Loc] = true
+		} else {
+			ei.TgDzHasYaoHe[i.dz1Loc] = true
+			ei.TgDzHasYaoHe[i.dz2Loc] = true
+		}
 	}
 }
 
@@ -64,8 +70,13 @@ func (z Bz) findAllDzbh(ei *HeInfo) {
 		}
 	}
 	for _, i := range ei.DzbhCanHe {
-		ei.TgDzHasHe[i.dz1Loc] = true
-		ei.TgDzHasHe[i.dz2Loc] = true
+		if i.dz2Loc-i.dz1Loc == 2 {
+			ei.TgDzHasHe[i.dz1Loc] = true
+			ei.TgDzHasHe[i.dz2Loc] = true
+		} else {
+			ei.TgDzHasYaoHe[i.dz1Loc] = true
+			ei.TgDzHasYaoHe[i.dz2Loc] = true
+		}
 	}
 }
 
@@ -136,8 +147,13 @@ func (z Bz) findAllTg5h(ei *HeInfo) {
 				wx := z.tg5h(tg1Loc, tg2Loc)
 				if wx != -1 {
 					res = append(res, Tg5hCanHe{tg1Loc, tg2Loc, wx})
-					ei.TgDzHasHe[tg1Loc] = true
-					ei.TgDzHasHe[tg2Loc] = true
+					if tg2Loc-tg1Loc == 2 {
+						ei.TgDzHasHe[tg1Loc] = true
+						ei.TgDzHasHe[tg2Loc] = true
+					} else {
+						ei.TgDzHasYaoHe[tg1Loc] = true
+						ei.TgDzHasYaoHe[tg2Loc] = true
+					}
 				}
 			}
 		}

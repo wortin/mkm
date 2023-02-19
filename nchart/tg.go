@@ -17,6 +17,14 @@ const (
 
 var TgChars = [10]string{"甲", "乙", "丙", "丁", "戊", "己", "庚", "辛", "壬", "癸"}
 
+func ParseTg(year int) Tg {
+	i := (year - 3) % 10
+	if i == 0 {
+		return TgGui
+	}
+	return Tg(i - 1)
+}
+
 func (t Tg) String() string {
 	if t < 0 || int(t) >= len(TgChars) {
 		return ""

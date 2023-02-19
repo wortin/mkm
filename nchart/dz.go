@@ -24,6 +24,14 @@ const (
 
 var DzChars = [12]string{"子", "丑", "寅", "卯", "辰", "巳", "午", "未", "申", "酉", "戌", "亥"}
 
+func ParseDz(year int) Dz {
+	i := (year - 3) % 12
+	if i == 0 {
+		return DzHai
+	}
+	return Dz(i - 1)
+}
+
 func (d Dz) String() string {
 	if d < 0 || int(d) >= len(DzChars) {
 		return ""
